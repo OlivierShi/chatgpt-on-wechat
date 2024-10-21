@@ -8,3 +8,7 @@ Pillow
 pre-commit
 web.py
 linkai>=0.0.6.0
+# wechatmp && wechatcom
+web.py
+wechatpy
+azure-cognitiveservices-speech # azure voice
