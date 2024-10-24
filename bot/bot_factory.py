@@ -31,6 +31,10 @@ def create_bot(bot_type):
         # Azure chatgpt service https://azure.microsoft.com/en-in/products/cognitive-services/openai-service/
         from bot.chatgpt.chat_gpt_bot import AzureChatGPTBot
         return AzureChatGPTBot()
+    
+    elif bot_type == const.LIGHTAGENT:
+        from bot.lightagent.lightagent_bot import LightAgentBot
+        return LightAgentBot()
 
     elif bot_type == const.XUNFEI:
         from bot.xunfei.xunfei_spark_bot import XunFeiBot
