@@ -44,6 +44,7 @@ class LightAgentBot(Bot):
             logger.info("[CHATGPT] query={}".format(query))
             session_id = context["session_id"]
             session = self.sessions.session_query(query, session_id)
+            logger.info("[CHATGPT] context={}".format(context))
             reply_content = self.reply_text(session, context["receiver"])
             self.sessions.session_reply(reply_content["content"], session_id, reply_content["total_tokens"])
             reply = Reply(ReplyType.TEXT, reply_content["content"])
@@ -54,14 +55,17 @@ class LightAgentBot(Bot):
         user_id = self.gen_uuid(receiver)
         user = UserProfile(user_id, user_id, datetime.now())
         if session.is_beginning():
+            logger.info("[CHATGPT] session is beginning")
             conv_id = self.agent.initiate_conversation(user)
         else:
-            conv_id = session.session_id
+            conv_id = self.gen_uuid(session.session_id)
+        
+        logger.info("[CHATGPT] conv_id={}".format(conv_id))
         user_query = session.get_latest_user_query()
         if user_query is None or user_query == "":
             user_query = "你好啊"
         
-        message = Message(msg_id, user_query, datetime.now(), conv_id, ["web_search"])
+        message = Message(msg_id, user_query, datetime.now(), conv_id, ["web_search", "message_in_a_bottle"])
         reply_message, _metrics = self.agent.chat(message)
         return {
                 "total_tokens": _metrics.get("total_tokens", int(len(reply_message.response) / 5) + int(len(user_query) / 5)),
