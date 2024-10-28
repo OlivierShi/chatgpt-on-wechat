@@ -52,6 +52,17 @@ class ChatGPTSession(Session):
     def calc_tokens(self):
         return num_tokens_from_messages(self.messages, self.model)
 
+    def is_beginning(self):
+        user_messages = [msg for msg in self.messages if msg["role"] == "user"]
+        if len(user_messages) <= 1:
+            return True
+        return False
+    
+    def get_latest_user_query(self):
+        for msg in self.messages[::-1]:
+            if msg["role"] == "user":
+                return msg["content"]
+        return ""
 
 # refer to https://github.com/openai/openai-cookbook/blob/main/examples/How_to_count_tokens_with_tiktoken.ipynb
 def num_tokens_from_messages(messages, model):
